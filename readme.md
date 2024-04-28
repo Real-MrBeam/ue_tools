@@ -10,6 +10,6 @@ Run the VAT settings script and select the textures. This will automatically set
 
 If you want to set them manually you can see in the official [Unreal Docs](https://docs.unrealengine.com/5.2/en-US/vertex-animation-tool---timeline-meshes-in-unreal-engine/) what settings to use.
 
-Now you can apply your vertex animation material on the mesh. I've created a simple one you can use [here](https://blueprintue.com/blueprint/dsiriiag/).
+I've created a simple VAT material one you can use to view your animation [here](https://blueprintue.com/blueprint/dsiriiag/).
 
-![[GIF 2023-07-06 16-24-55.gif]]
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vanim.gif)
