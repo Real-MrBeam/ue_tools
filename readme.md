@@ -1,17 +1,15 @@
-Collection of Blender tools that makes life easier.
+# Unreal Tools
 
-1. Remove Vertex Groups
-Cleans the mesh from all vertex groups.
-Deprecated?
+A collection of my Unreal Engine tools.
 
-2. Align UV Vertices
-Deprecated?
+## VAT Import Setting Script - SAA
 
+Run the VAT settings script and select the textures. This will automatically set the correct import settings for you on your mesh and VAT.
 
-3. Sharp Seams
-(Marks seams with given angle and turns them instantly to sharp edges)
+![[Blender Vertex Animation Texture Pipeline.png]]
 
-4. Skin Weight Tool
-(Select all on selected submesh | Remove Unselected | Remove below given value.) Essential when working with a mesh that has a lot of submeshes.
+If you want to set them manually you can see in the official [Unreal Docs](https://docs.unrealengine.com/5.2/en-US/vertex-animation-tool---timeline-meshes-in-unreal-engine/) what settings to use.
 
-5. Flip Book Vertex Painter (Adds .01 color vertex value per mesh)
+Now you can apply your vertex animation material on the mesh. I've created a simple one you can use [here](https://blueprintue.com/blueprint/dsiriiag/).
+
+![[GIF 2023-07-06 16-24-55.gif]]
