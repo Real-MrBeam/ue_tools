@@ -13,3 +13,10 @@ If you want to set them manually you can see in the official [Unreal Docs](https
 I've included a simple VAT material you can use to view your animation.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vanim.gif)
+
+## Light Ray Tool - Geometry Script
+
+A dynamic mesh tool made in geometry script.
+It follows a selected directional lights rotation. Uses distance, fresnel (and distance fields on PC) for fading. This prevents clipping and looking two dimensional.
+
+The original intention was to be able to have rays on low end devices, such as the quest 2, but it also complements the volumetric rays on PC VR.
