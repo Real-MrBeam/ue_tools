@@ -24,4 +24,9 @@ The original intention was to be able to have rays on low end VR devices, such a
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray1.gif)
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray2.gif)
 
+Place the ray actor in the level, you can change the width, depth and rotation on the actor parameters. The rotation and scale transforms are locked.
+
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray23.gif)
+
+When happy with the look you need to bake the meshes to static. Press the Bake Mesh button on the Ray Widget.
 
