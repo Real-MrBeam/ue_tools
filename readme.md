@@ -4,12 +4,12 @@ A collection of my Unreal Engine tools.
 
 ## VAT Import Setting Script - SAA
 
-Run the VAT settings script and select the textures. This will automatically set the correct import settings for you on your mesh and VAT.
+Made for making vertex animation textures importing easier. For example animations made by using my [Blender VAT Tools](https://codeberg.org/MrBeam/b3d_tools.git).
+Run the VAT settings script and select the textures and mesh. This will automatically set the correct import settings for you.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/Blender%20Vertex%20Animation%20Texture%20Pipeline.png)
 
 If you want to set them manually you can see in the official [Unreal Docs](https://docs.unrealengine.com/5.2/en-US/vertex-animation-tool---timeline-meshes-in-unreal-engine/) what settings to use.
-
 I've included a simple VAT material you can use to view your animation.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vanim.gif)
@@ -18,7 +18,6 @@ I've included a simple VAT material you can use to view your animation.
 
 A dynamic mesh tool made in geometry script.
 It follows a selected directional lights rotation. Uses distance, fresnel (and distance fields on PC) for fading. This prevents clipping and looking two dimensional.
-
 The original intention was to be able to have rays on low end VR devices, such as the quest 2, but it also complements the volumetric rays on PC VR and flat screen PC.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray1.gif)
@@ -35,9 +34,8 @@ The original intention was to be able to have rays on low end VR devices, such a
 
 ## Custom Primitive Data Widget - EUW
 
-With it you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like. You can also view the CPD values that is already set on the selected object.
+With it you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like.
 Write the parameter name you want to change in the parameter field when using it.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/commit/9a5e63967f3ad99f30ef8b3939239e4bccab1ab3/readme/CPDRandom.gif)
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDOffset.gif)
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDGet.gif)
