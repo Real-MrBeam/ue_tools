@@ -27,12 +27,18 @@ The original intention was to be able to have rays on low end VR devices, such a
 - Make sure that your directional or spotlight you use as sun has an actor tag with a name that makes sense. As default the tool is looking for is "sun".
 - Place the BP_LightRay actor in the scene, you can change the width, depth and rotation on the actor parameters. The rotation and scale transforms are locked.
 
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray23.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/Light%20Shafts-4.png)
 
 - Tweak you values to your liking and bake you light rays by pressing the "bake" button on the EUW_LightRay widgets button. This will create static mesh assets for you and hide the dynamic actor in the scene. The "update" button will delete your static mesh actors and turn on visibility on the dynamic lightrays.
 
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray23.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/euw.png)
 
-## Custom Primitive Data Tool - EUW
+## Custom Primitive Data Widget - EUW
 
+With it you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like. You can also view the CPD values that is already set on the selected object.
+Write the parameter name you want to change in the parameter field when using it.
+
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray1.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray2.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray2.gif)
 
