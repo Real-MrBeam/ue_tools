@@ -38,7 +38,6 @@ The original intention was to be able to have rays on low end VR devices, such a
 With it you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like. You can also view the CPD values that is already set on the selected object.
 Write the parameter name you want to change in the parameter field when using it.
 
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray1.gif)
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray2.gif)
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray2.gif)
-
+![image](https://codeberg.org/MrBeam/ue_tools/raw/commit/9a5e63967f3ad99f30ef8b3939239e4bccab1ab3/readme/CPDRandom.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDOffset.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDGet.gif)
