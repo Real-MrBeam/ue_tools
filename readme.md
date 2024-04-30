@@ -1,6 +1,6 @@
 # Unreal Tools
 
-A collection of my Unreal Engine tools.
+A sample of my Unreal Engine tools.
 
 ## VAT Import Setting Script - SAA
 
