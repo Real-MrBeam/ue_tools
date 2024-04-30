@@ -14,7 +14,7 @@ I've included a simple VAT material you can use to view your animation.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vanim.gif)
 
-## Light Ray Tool - Geometry Script
+## Light Ray Tool - Geometry Script / EUW
 
 A dynamic mesh tool made in geometry script.
 It follows a selected directional lights rotation. Uses distance, fresnel (and distance fields on PC) for fading. This prevents clipping and looking two dimensional.
@@ -24,9 +24,15 @@ The original intention was to be able to have rays on low end VR devices, such a
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray1.gif)
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray2.gif)
 
-Place the ray actor in the level, you can change the width, depth and rotation on the actor parameters. The rotation and scale transforms are locked.
+- Make sure that your directional or spotlight you use as sun has an actor tag with a name that makes sense. As default the tool is looking for is "sun".
+- Place the BP_LightRay actor in the scene, you can change the width, depth and rotation on the actor parameters. The rotation and scale transforms are locked.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray23.gif)
 
-When happy with the look you need to bake the meshes to static. Press the Bake Mesh button on the Ray Widget.
+- Tweak you values to your liking and bake you light rays by pressing the "bake" button on the EUW_LightRay widgets button. This will create static mesh assets for you and hide the dynamic actor in the scene. The "update" button will delete your static mesh actors and turn on visibility on the dynamic lightrays.
+
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray23.gif)
+
+## Custom Primitive Data Tool - EUW
+
 
