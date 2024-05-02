@@ -33,8 +33,10 @@ The original intention was to be able to have rays on low end VR devices, such a
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/euw.png)
 
 ## Custom Primitive Data Widget - EUW
+### Dependencies
+**This tool relies on an external Unreal Engine plugin to function properly. Please ensure you have the [UMG Color Pickers](https://www.unrealengine.com/marketplace/en-US/product/umg-color-pickers-01) plugin installed for this tool to work.**
 
-With it you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like.
+With this tool you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like.
 Write the parameter name you want to change in the parameter field when using it.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/commit/9a5e63967f3ad99f30ef8b3939239e4bccab1ab3/readme/CPDRandom.gif)
