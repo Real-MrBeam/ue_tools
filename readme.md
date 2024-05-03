@@ -15,6 +15,8 @@ I've included a simple VAT material you can use to view your animation.
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vanim.gif)
 
 ## Light Ray Tool - Geometry Script / EUW
+### Dependencies
+**This tool requires Unreal [Geometry Script](https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-users-guide-in-unreal-engine) plugin to be enabled in your project.**
 
 A dynamic mesh tool made in geometry script.
 It follows a selected directional lights rotation. Uses distance, fresnel (and distance fields on PC) for fading. This prevents clipping and looking two dimensional.
