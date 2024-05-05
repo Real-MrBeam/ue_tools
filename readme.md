@@ -39,7 +39,7 @@ Write the parameter name you want to change in the parameter field when using it
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDRandom.gif)
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDOffset.gif)
 
-# Miscellaenious Tools
+# Miscellaneous Tools
 Smaller scripts.
 
 ## Static Mesh Build Settings - SSA
