@@ -40,8 +40,7 @@ Write the parameter name you want to change in the parameter field when using it
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDOffset.gif)
 
 ## Volumetric Lightmap Sampler - EUW
-Spawns a Blueprint actor that samples the volumetric light value at every filtered scene actor. Then it writes the sampled volumetric light value as a CPD value on each static mesh component. Enabling you to use that value as a material parameter.
-Handy when using [my fake reflections](https://blueprintue.com/blueprint/24t7k-e6/) for fully rough materials when developing towards low end VR devices such as the Quest. You can use the value as a reflection strength parameter to keep reflections from glowing in the dark.
+Samples the volumetric light value at every filtered scene actor, then writes the sampled volumetric light value as a CPD value on each static mesh component, enabling you to use that value as a material parameter. This is particularly handy when using [my fake reflections](https://blueprintue.com/blueprint/24t7k-e6/) for fully rough materials when developing for low-end VR devices such as the Quest. You can use the value as a reflection strength parameter to prevent reflections from glowing in the dark.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vlmSampler.gif)
 
