@@ -51,10 +51,3 @@ Smaller scripts.
 Bulk edit mesh build settings.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/UnrealEditor_7KtwBIaWCq.png)
-
-
-## Reparent Blueprints - SSA
-Bulk reparent blueprints.
-
-
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/UnrealEditor_VpR4FseuRU.png)
