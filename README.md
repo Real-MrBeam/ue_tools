@@ -36,20 +36,25 @@ The original intention was to be able to have rays on low end VR devices, such a
 With this tool you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like.
 Write the parameter name you want to change in the parameter field when using it.
 
-![image](https://codeberg.org/MrBeam/ue_tools/raw/commit/9a5e63967f3ad99f30ef8b3939239e4bccab1ab3/readme/CPDRandom.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDRandom.gif)
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDOffset.gif)
 
-# Miscellaenious Tools
+## Volumetric Lightmap Sampler - EUW
+Samples the volumetric light value at every filtered scene actor, then writes the sampled volumetric light value as a CPD value on each static mesh component, enabling you to use that value as a material parameter. This is particularly handy when using [my fake reflections](https://blueprintue.com/blueprint/24t7k-e6/) for fully rough materials when developing for low-end VR devices such as the Quest. You can use the value as a reflection strength parameter to prevent reflections from glowing in the dark.
+
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vlmSampler.gif)
+
+# Miscellaneous Tools
 Smaller scripts.
 
 ## Static Mesh Build Settings - SSA
 Bulk edit mesh build settings.
 
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/euw.png)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/UnrealEditor_7KtwBIaWCq.png)
 
 
 ## Reparent Blueprints - SSA
 Bulk reparent blueprints.
 
 
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/euw.png)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/UnrealEditor_VpR4FseuRU.png)
