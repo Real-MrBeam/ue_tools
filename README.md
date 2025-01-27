@@ -44,6 +44,12 @@ Samples the volumetric light value at every filtered scene actor, then writes th
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vlmSampler.gif)
 
+## Luminance Reflectance Debug View - Python EUW
+Custom Debug View that makes it easy to spot incorrect luminance values. Useful for  ensuring consistent color accuracy.
+
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum1.gif)
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum2.gif)
+
 # Miscellaneous Tools
 Smaller scripts.
 
