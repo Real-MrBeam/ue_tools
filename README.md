@@ -2,6 +2,7 @@
 A sample of my Unreal Engine tools.
 
 ## VAT Import Setting Script - SAA
+### UE 4.7
 Made for making vertex animation textures importing easier. For example animations made by using my [Blender VAT Tools](https://codeberg.org/MrBeam/b3d_tools.git).
 Run the VAT settings script and select the textures and mesh. This will automatically set the correct import settings for you.
 
@@ -13,6 +14,7 @@ I've included a simple VAT material you can use to view your animation.
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vanim.gif)
 
 ## Light Ray Tool - Geometry Script / EUW
+### UE 4.7
 ### Dependencies
 **This tool requires Unreal [Geometry Script](https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-users-guide-in-unreal-engine) plugin to be enabled in your project.**
 
@@ -33,6 +35,7 @@ The original intention was to be able to have rays on low end VR devices, such a
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/euw.png)
 
 ## Custom Primitive Data Widget - EUW
+### UE 4.7
 With this tool you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like.
 Write the parameter name you want to change in the parameter field when using it.
 
@@ -40,11 +43,13 @@ Write the parameter name you want to change in the parameter field when using it
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDOffset.gif)
 
 ## Volumetric Lightmap Sampler - EUW
+### UE 4.7
 Samples the volumetric light value at every filtered scene actor, then writes the sampled volumetric light value as a CPD value on each static mesh component, enabling you to use that value as a material parameter. This is particularly handy when using [my fake reflections](https://blueprintue.com/blueprint/24t7k-e6/) for fully rough materials when developing for low-end VR devices such as the Quest. You can use the value as a reflection strength parameter to prevent reflections from glowing in the dark.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vlmSampler.gif)
 
 ## Luminance Reflectance Debug View - Python EUW
+### UE 5.5
 Custom Debug View that makes it easy to spot physically incorrect luminance values. Useful for  ensuring consistent color accuracy.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum1.gif)
@@ -54,6 +59,7 @@ Custom Debug View that makes it easy to spot physically incorrect luminance valu
 Smaller scripts.
 
 ## Static Mesh Build Settings - SSA
+### UE 4.7
 Bulk edit mesh build settings.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/UnrealEditor_7KtwBIaWCq.png)
