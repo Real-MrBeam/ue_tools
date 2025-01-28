@@ -55,11 +55,10 @@ Custom Debug View that makes it easy to spot physically incorrect luminance valu
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum1.gif)
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum2.gif)
 
-# Miscellaneous Tools
-Smaller scripts.
+- Unzip to the game dir and make sure the python script is set as a startup script.
 
-## Static Mesh Build Settings - SSA
-### UE 4.7
-Bulk edit mesh build settings.
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum.png)
 
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/UnrealEditor_7KtwBIaWCq.png)
+- Restart the editor and launch the tool via the native tools menu. You close it in the same manner.
+
+![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum1.png)
