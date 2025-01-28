@@ -3,7 +3,7 @@ A sample of my Unreal Engine tools.
 
 ## VAT Import Setting Script - SAA
 ### UE 4.7
-Made for making vertex animation textures importing easier. For example animations made by using my [Blender VAT Tools](https://codeberg.org/MrBeam/b3d_tools.git).
+Made for making vertex animation textures importing easier. For example; animations made by using my [Blender VAT Tools](https://codeberg.org/MrBeam/b3d_tools.git).
 Run the VAT settings script and select the textures and mesh. This will automatically set the correct import settings for you.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/Blender%20Vertex%20Animation%20Texture%20Pipeline.png)
@@ -44,7 +44,7 @@ Write the parameter name you want to change in the parameter field when using it
 
 ## Volumetric Lightmap Sampler - EUW
 ### UE 4.7
-Samples the volumetric light value at every filtered scene actor, then writes the sampled volumetric light value as a CPD value on each static mesh component, enabling you to use that value as a material parameter. This is particularly handy when using [my fake reflections](https://blueprintue.com/blueprint/24t7k-e6/) for fully rough materials when developing for low-end VR devices such as the Quest. You can use the value as a reflection strength parameter to prevent reflections from glowing in the dark.
+Samples the volumetric light value at every specified scene actors position, then writes the sampled volumetric light value as a CPD value on each static mesh component, enabling you to use that value as a material parameter. This is particularly handy when using [my fake reflections](https://blueprintue.com/blueprint/24t7k-e6/) for fully rough materials when developing for low-end VR devices such as the Quest. You can use the value as a reflection strength parameter to prevent reflections from glowing in the dark.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vlmSampler.gif)
 
