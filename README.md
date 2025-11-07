@@ -1,32 +1,40 @@
 # Unreal Tools
-A sample of my Unreal Engine tools.
+A small suite of content-pipeline helpers for Unreal Engine that smooth over repetitive setup, expose useful debug views, and make VAT-style workflows and low-end VR compromises easier to ship.
 
 ## VAT Import Setting Script - SAA
 ### UE 4.7
-Made for making vertex animation textures importing easier. For example; animations made by using my [Blender VAT Tools](https://codeberg.org/MrBeam/b3d_tools.git).
-Run the VAT settings script and select the textures and mesh. This will automatically set the correct import settings for you.
+Scripted importer settings for Vertex Animation Textures so you don’t have to configure every texture/mesh by hand.
+
+Pair this with assets exported via my [Blender VAT Tools](https://codeberg.org/MrBeam/b3d_tools.git).
+Run the VAT settings script on selected textures and mesh. This will automatically set the correct import settings for you.
+
+- Applies consistent Unreal import settings, known to work with standard VAT materials.
+- Includes a simple VAT material to validate playback quickly.
+
+If you prefer manual setup, the official docs outline the expected settings for VAT:
+[Unreal Docs](https://docs.unrealengine.com/5.2/en-US/vertex-animation-tool---timeline-meshes-in-unreal-engine/)
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/Blender%20Vertex%20Animation%20Texture%20Pipeline.png)
 
-If you want to set them manually you can see in the official [Unreal Docs](https://docs.unrealengine.com/5.2/en-US/vertex-animation-tool---timeline-meshes-in-unreal-engine/) what settings to use.
-I've included a simple VAT material you can use to view your animation.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/vanim.gif)
 
 ## Light Ray Tool - Geometry Script / EUW
 ### UE 4.7
-### Dependencies
 **This tool requires Unreal [Geometry Script](https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-users-guide-in-unreal-engine) plugin to be enabled in your project.**
 
-A dynamic mesh tool made in geometry script.
-It follows a selected directional lights rotation. Uses distance, fresnel (and distance fields on PC) for fading. This prevents clipping and looking two dimensional.
-The original intention was to be able to have rays on low end VR devices, such as the quest 2, but it also complements the volumetric rays on PC VR and flat screen PC.
+A dynamic-mesh ray-shaft generator driven by a directional light. It uses distance, Fresnel, and (on PC) Distance Fields for believable fading so the result avoids obvious planes and clipping. Originally built for low-end VR (Quest 2), but it also complements volumetric fog on PC.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray1.gif)
+
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/ray2.gif)
 
-- Make sure that your directional or spotlight you use as sun has an actor tag with a name that makes sense. As default the tool is looking for is "sun".
-- Place the BP_LightRay actor in the scene, you can change the width, depth and rotation on the actor parameters. The rotation and scale transforms are locked.
+1. Give your sun light (directional or spotlight) an Actor Tag, by default the tool looks for "sun".
+2. Place BP_LightRay in the level. Adjust Width, Depth, and Rotation via exposed params
+(actor rotation/scale transforms are intentionally locked, use the params instead).
+3. Use the EUW_LightRay panel:
+    - Bake → Generates static meshes and hides the dynamic actor.
+    - Update → Deletes the baked meshes and unhides the dynamic actor.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/Light%20Shafts-4.png)
 
@@ -36,8 +44,7 @@ The original intention was to be able to have rays on low end VR devices, such a
 
 ## Custom Primitive Data Widget - EUW
 ### UE 4.7
-With this tool you can set scalar and color CPD values easily, on multiple objects at once. You can even set random values if you like.
-Write the parameter name you want to change in the parameter field when using it.
+An Editor Utility Widget to batch-set Custom Primitive Data across many actors/components, great for driving per-object material params like tint, dirt amount, wind phase, etc.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDRandom.gif)
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/CPDOffset.gif)
