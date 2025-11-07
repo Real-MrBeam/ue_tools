@@ -85,5 +85,4 @@ Usage
 2. The sampled value is written to a CPD parameter on each component.
 3. In your material, read the CPD to modulate reflection strength.
 
-
-**Ensure your level has valid VLM data (Lightmass/GPULightmass).**
+**Ensure your level has valid VLM data to sample.**
