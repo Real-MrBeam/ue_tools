@@ -12,10 +12,7 @@ A custom Debug View that highlights physically implausible luminance/reflectance
 Install & run
 
 1. Unzip the tool into your project’s game directory.
-2. Set the included Python script as a startup script.
-
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum.png)
-
+2. Set the included Python script as a startup script in settings.
 3. Restart the editor.
 4. Launch the tool from the native Tools menu; close it from the same menu.
 
@@ -38,10 +35,6 @@ Usage
 3. Use the EUW_LightRay panel:
     - Bake - Generates static meshes and hides the dynamic actor.
     - Update - Deletes the baked meshes and unhides the dynamic actor.
-
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/Light%20Shafts-4.png)
-
-![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/euw.png)
 
 ## VAT Import Setting Script - SAA
 ### UE 4.7
