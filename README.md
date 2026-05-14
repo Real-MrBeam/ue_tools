@@ -11,10 +11,17 @@ A custom Debug View that highlights physically implausible luminance/reflectance
 
 Install & run
 
-1. Unzip the tool into your project’s game directory.
+1. Unzip the tool into your project’s **game** directory.
 2. Set the included Python script as a startup script in settings.
+
+![](/readme/startup.png)
+
 3. Restart the editor.
-4. Launch the tool from the native Tools menu; close it from the same menu.
+4. Start the debug view from the Buffer Visualization category.
+
+![](/readme/buffervis.png)
+
+5. Launch the range tool from the native Tools menu; close it from the same menu.
 
 ![image](https://codeberg.org/MrBeam/ue_tools/raw/branch/main/readme/debugLum1.png)
 
