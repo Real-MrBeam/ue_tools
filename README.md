@@ -2,7 +2,7 @@
 A small suite of content-pipeline helpers for Unreal Engine that smooth over repetitive setup, expose useful debug views, and make VAT-style workflows easier.
 
 ## Luminance Reflectance Debug View - Python EUW
-### UE 5.5
+### UE 5.7
 
 A custom Debug View that highlights physically implausible luminance/reflectance values, so you can spot assets that break energy conservation or reference values. Helpful when you need consistent color accuracy across a project.
 
@@ -14,12 +14,18 @@ Install & run
 1. Unzip the tool into your project’s **game** directory.
 2. Set the included Python script as a startup script in settings.
 
-![](/readme/startup.png)
+![image](/readme/startup.png)
 
-3. Restart the editor.
-4. Start the debug view from the Buffer Visualization category.
+3. Edit the `DefauleEngine.ini` file in our config dir with these two lines:
+```
+[Engine.BufferVisualizationMaterials]
 
-![](/readme/buffervis.png)
+AlbedoValidation=(Material="/Game/BufferVisualization/M_AlbedoValidation.M_AlbedoValidation", Name=LOCTEXT("M_AlbedoValidationMat", "Albedo Validation"))
+```
+4. Restart the editor.
+5. Start the debug view from the Buffer Visualization category.
+
+![image](/readme/buffervis.png)
 
 5. Launch the range tool from the native Tools menu; close it from the same menu.
 
