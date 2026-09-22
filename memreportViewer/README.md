@@ -5,7 +5,7 @@ A desktop viewer for Unreal Engine `memreport -full` captures. It finds every me
 
 Use it to answer "why did the texture pool grow?" without reading memreport text files by hand.
 
-![image](readme/poolview.gif)
+![image](../readme/poolview.gif)
 
 ## Requirements
 - Python 3.10 or newer, with tkinter. The python.org Windows installer includes tkinter by default.

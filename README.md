@@ -35,7 +35,7 @@ AlbedoValidation=(Material="/Game/BufferVisualization/M_AlbedoValidation.M_Albed
 ### UE 5
 A desktop viewer for `memreport -full` captures. It charts resident texture memory for every capture in a folder and shows which textures were added, removed, grew or shrank between captures.
 
-![image](memreportViewer/readme/poolview.gif)
+![image](readme/poolview.gif)
 
 See the [Memreport Viewer README](memreportViewer/README.md) for install and usage.
 
