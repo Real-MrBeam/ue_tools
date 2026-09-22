@@ -31,6 +31,14 @@ AlbedoValidation=(Material="/Game/BufferVisualization/M_AlbedoValidation.M_Albed
 
 ![image](readme/debugLum1.png)
 
+## Memreport Viewer - Python
+### UE 5
+A desktop viewer for `memreport -full` captures. It charts resident texture memory for every capture in a folder and shows which textures were added, removed, grew or shrank between captures.
+
+![image](memreportViewer/readme/poolview.gif)
+
+See the [Memreport Viewer README](memreportViewer/README.md) for install and usage.
+
 ## Light Ray Tool - Geometry Script / EUW
 ### UE 4.7
 **This tool requires Unreal [Geometry Script](https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-users-guide-in-unreal-engine) plugin to be enabled in your project.**
