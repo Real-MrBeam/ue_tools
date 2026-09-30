@@ -10,7 +10,7 @@ Needs pooldump.py in the same folder; it does all the parsing. Otherwise
 standard library only: Python 3.10+ with tkinter, which the python.org
 Windows installer includes.
 
-    python poolview.py                      scan the folder this file is in
+    python poolview.py                      scan the editor MemReports folder
     python poolview.py D:\\path\\MemReports   scan a specific folder
 
 Keys: Left / Right step between captures, Home / End jump to first / last.
@@ -41,6 +41,7 @@ import tkinter.font as tkfont
 from tkinter import filedialog, messagebox, ttk
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_FOLDER = os.path.abspath(os.path.join(HERE, "..", "..", "..", "Saved", "Profiling", "MemReports"))
 if HERE not in sys.path:
     sys.path.insert(0, HERE)
 
@@ -49,7 +50,7 @@ try:
 except Exception:  # reported in the UI
     pooldump = None
 
-CACHE_VERSION = 3
+CACHE_VERSION = 4
 TRANSIENT = ("/Engine/Transient", "/Engine/EditorResources")
 VIEW_RE = re.compile(r"View Location:\s*X=(-?[\d.]+)\s*Y=(-?[\d.]+)\s*Z=(-?[\d.]+)")
 CAMERA_WARN_METRES = 5.0
@@ -163,12 +164,13 @@ def nice_step(maxv, target=5):
 
 # ---------------------------------------------------------------- loading ---
 class Report:
-    def __init__(self, path, mtime, header, view, textures):
+    def __init__(self, path, capture_time, header, view, textures, is_full_report):
         self.path = path
-        self.mtime = mtime
+        self.capture_time = capture_time
         self.header = header or {}
         self.view = tuple(view) if view else None
         self.textures = textures
+        self.is_full_report = is_full_report
 
     @property
     def device(self):
@@ -184,11 +186,11 @@ class Report:
 
     @property
     def short(self):
-        return time.strftime("%m-%d %H:%M", time.localtime(self.mtime))
+        return time.strftime("%m-%d %H:%M", time.localtime(self.capture_time))
 
     @property
     def long(self):
-        return time.strftime("%Y-%m-%d %H:%M", time.localtime(self.mtime))
+        return time.strftime("%Y-%m-%d %H:%M", time.localtime(self.capture_time))
 
 
 def read_view_location(path):
@@ -211,6 +213,7 @@ def cache_root():
 
 def load_one(path, croot, stamp):
     st = os.stat(path)
+    capture_time = pooldump.memreport_capture_time(path)
     key = hashlib.sha1(
         f"{CACHE_VERSION}|{stamp}|{os.path.abspath(path)}|{st.st_size}|{st.st_mtime_ns}"
         .encode()).hexdigest()
@@ -219,24 +222,27 @@ def load_one(path, croot, stamp):
         try:
             with open(cpath, encoding="utf-8") as fh:
                 d = json.load(fh)
-            return Report(path, st.st_mtime, d["header"], d["view"], d["textures"]), True
+            return Report(path, capture_time, d["header"], d["view"], d["textures"],
+                          d["is_full_report"]), True
         except (OSError, ValueError, KeyError):
             pass
     textures, _totals, stats = pooldump.parse_memreport(path)
     header = stats.get("header", {}) or {}
+    is_full_report = stats.get("is_full_report", False)
     view = read_view_location(path)
     try:
         with open(cpath, "w", encoding="utf-8") as fh:
-            json.dump({"header": header, "view": view, "textures": textures}, fh)
+            json.dump({"header": header, "view": view, "textures": textures,
+                       "is_full_report": is_full_report}, fh)
     except OSError:
         pass
-    return Report(path, st.st_mtime, header, view, textures), False
+    return Report(path, capture_time, header, view, textures, is_full_report), False
 
 
 def loader(folder, q):
     try:
         files = glob.glob(os.path.join(folder, "**", "*.memreport"), recursive=True)
-        files.sort(key=os.path.getmtime)
+        files.sort(key=pooldump.memreport_sort_key)
         croot = cache_root()
         stamp = os.path.getmtime(pooldump.__file__)
         out, cached = [], 0
@@ -248,6 +254,7 @@ def loader(folder, q):
                 cached += hit
             except Exception as exc:
                 q.put(("error", f, str(exc)))
+        out.sort(key=lambda r: (r.capture_time, os.path.normcase(os.path.abspath(r.path))))
         q.put(("done", out, cached))
     except Exception:
         q.put(("fatal", traceback.format_exc()))
@@ -890,6 +897,9 @@ class App:
         msg = f"{len(reports)} captures in {self.folder}"
         if reports:
             msg += f", {cached} from cache"
+            not_full = sum(not r.is_full_report for r in reports)
+            if not_full:
+                msg += f", {not_full} not full"
         if self.errors:
             msg += f". {len(self.errors)} could not be read: " + "; ".join(self.errors[:3])
         self.set_status(msg)
@@ -982,7 +992,7 @@ class App:
     def make_labels(reps):
         base = [r.short for r in reps]
         dup = {b for b in base if base.count(b) > 1}
-        return [time.strftime("%m-%d %H:%M:%S", time.localtime(r.mtime)) if b in dup else b
+        return [time.strftime("%m-%d %H:%M:%S", time.localtime(r.capture_time)) if b in dup else b
                 for r, b in zip(reps, base)]
 
     def toggle_category(self, cat):
@@ -1046,6 +1056,9 @@ class App:
                  f"{now_total:.1f} MB shown     {os.path.basename(cur.path)}")
 
         warns = []
+        if not cur.is_full_report:
+            warns.append("This is not a full report. Capture it with 'memreport -full'; "
+                         "some texture sections are missing.")
         if prev and (prev.device, prev.config) != (cur.device, cur.config):
             warns.append(f"The previous capture is {prev.device} / {prev.config}, so the two "
                          f"are not comparable.")
@@ -1206,7 +1219,7 @@ def main():
                 ctypes.windll.user32.SetProcessDPIAware()
             except Exception:
                 pass
-    folder = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else HERE
+    folder = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_FOLDER
     root = tk.Tk()
 
     def report_error(exc, val, tb):

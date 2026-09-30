@@ -12,7 +12,9 @@ Use it to answer "why did the texture pool grow?" without reading memreport text
 - No other packages.
 
 ## Install
-Copy `poolview.bat`, `poolview.py` and `pooldump.py` into the same folder. The easiest place is your project's `Saved/Profiling/MemReports` folder, because the viewer scans the folder it is in.
+Copy `poolview.bat`, `poolview.py` and `pooldump.py` into `<YourProject>/Content/Python/memreportViewer`. Keep the three files together.
+
+From there the viewer finds your project's `Saved/Profiling/MemReports` folder on its own. It works from any folder three levels below the project root, and you can always point it somewhere else.
 
 ## Capturing memreports
 1. Run your game or PIE session.
@@ -22,7 +24,7 @@ Copy `poolview.bat`, `poolview.py` and `pooldump.py` into the same folder. The e
 Take one capture before and one after the change you want to measure.
 
 ## Usage
-Double-click `poolview.bat`. It opens the viewer on the folder it is in.
+Double-click `poolview.bat`. It opens the viewer on your project's `Saved/Profiling/MemReports` folder.
 
 To view a different folder, click **Open folder…** in the viewer, or pass the folder on the command line:
 ```

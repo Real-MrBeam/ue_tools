@@ -78,10 +78,11 @@ Saved/Profiling/MemReports, "." is usually all you need.
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 # "4096x4096 (10922 KB, ?), 2048x2048 (2731 KB), <rest>"
 ROW_RE = re.compile(
@@ -94,14 +95,75 @@ HEADER_MARK = "Current/InMem"
 TOTAL_RE = re.compile(
     r"Total size:\s*InMem=\s*(?P<inmem>[\d.]+)\s*MB\s+OnDisk=\s*(?P<ondisk>[\d.]+)\s*MB\s*Count=(?P<count>\d+)"
 )
+SESSION_TIME_RE = re.compile(
+    r"-(?P<month>\d{2})\.(?P<day>\d{2})-(?P<hour>\d{2})\.(?P<minute>\d{2})\.(?P<second>\d{2})$"
+)
+REPORT_TIME_RE = re.compile(
+    r"-(?P<day>\d{2})-(?P<hour>\d{2})\.(?P<minute>\d{2})\.(?P<second>\d{2})\.memreport$",
+    re.IGNORECASE,
+)
+FULL_REPORT_MARKER = 'MemReport: Begin command "ListTextures"'
+
+
+def memreport_capture_time(path):
+    """Return the capture time encoded by UE, falling back to file mtime.
+
+    Copying or extracting reports can give every file the same modification
+    time. UE puts the session month/day in the parent folder and the capture
+    day/time in the filename, so prefer those values for ordering.
+    """
+    fallback = os.path.getmtime(path)
+    session_match = SESSION_TIME_RE.search(os.path.basename(os.path.dirname(path)))
+    report_match = REPORT_TIME_RE.search(os.path.basename(path))
+    if not session_match or not report_match:
+        return fallback
+
+    try:
+        modified = datetime.fromtimestamp(fallback)
+        session = datetime(
+            modified.year,
+            int(session_match.group("month")),
+            int(session_match.group("day")),
+            int(session_match.group("hour")),
+            int(session_match.group("minute")),
+            int(session_match.group("second")),
+        )
+        # A copied file cannot have been captured after it was copied. If the
+        # year-less UE session name appears in the future, it is from last year.
+        if session > modified + timedelta(days=1):
+            session = session.replace(year=session.year - 1)
+
+        capture = datetime(
+            session.year,
+            session.month,
+            int(report_match.group("day")),
+            int(report_match.group("hour")),
+            int(report_match.group("minute")),
+            int(report_match.group("second")),
+        )
+        # A profiling session can cross a month boundary.
+        if capture < session - timedelta(days=1):
+            month = session.month + 1
+            year = session.year
+            if month == 13:
+                month = 1
+                year += 1
+            capture = capture.replace(year=year, month=month)
+        return capture.timestamp()
+    except (ValueError, OSError, OverflowError):
+        return fallback
+
+
+def memreport_sort_key(path):
+    """Chronological and deterministic ordering for a memreport path."""
+    return memreport_capture_time(path), os.path.normcase(os.path.abspath(path))
 
 
 def resolve_memreport(path, index=0):
     """Accept a file, or a directory to search recursively for .memreport files.
 
-    index 0 is the newest by modification time, 1 the one before it.
+    index 0 is the newest by UE capture time, 1 the one before it.
     """
-    import os
     import glob as _glob
     if os.path.isfile(path):
         return path
@@ -110,7 +172,7 @@ def resolve_memreport(path, index=0):
     found = _glob.glob(os.path.join(path, "**", "*.memreport"), recursive=True)
     if len(found) <= index:
         raise SystemExit(f"found {len(found)} memreports under {path}, need at least {index+1}")
-    found.sort(key=os.path.getmtime, reverse=True)
+    found.sort(key=memreport_sort_key, reverse=True)
     return found[index]
 
 
@@ -135,9 +197,13 @@ def parse_memreport(path):
     header = {}
     current_section = None
     cap_label = None
+    is_full_report = False
 
     with open(path, "r", encoding="utf-8", errors="replace") as fh:
         for line in fh:
+            if line.strip() == FULL_REPORT_MARKER:
+                is_full_report = True
+
             for key in ("Changelist", "Config", "Device Name", "Device Profile"):
                 if line.startswith(key + ":"):
                     header[key] = line.split(":", 1)[1].strip()
@@ -220,7 +286,18 @@ def parse_memreport(path):
             if prev is None or entry["mem_kb"] > prev["mem_kb"]:
                 textures[name] = entry
 
-    return textures, totals, {"unparsed_rows": unparsed, "fields": fields, "cap_label": cap_label, "header": header}
+    return textures, totals, {
+        "unparsed_rows": unparsed,
+        "fields": fields,
+        "cap_label": cap_label,
+        "header": header,
+        "is_full_report": is_full_report,
+    }
+
+
+def warn_if_not_full(path, stats):
+    if not stats.get("is_full_report", False):
+        print(f"WARNING: {path} is not a full memreport; capture with 'memreport -full'.")
 
 
 def classify(t):
@@ -250,6 +327,7 @@ def mb(kb):
 def cmd_snapshot(args):
     path = resolve_memreport(args.memreport)
     textures, totals, stats = parse_memreport(path)
+    warn_if_not_full(path, stats)
     snap = {
         "captured_at": datetime.now(timezone.utc).isoformat(),
         "source": path,
@@ -439,6 +517,7 @@ def cmd_list(args):
     path = resolve_memreport(args.memreport)
     print(f"# {path}\n")
     textures, totals, stats = parse_memreport(path)
+    warn_if_not_full(path, stats)
     T = list(textures.values())
 
     if args.group:
@@ -489,9 +568,8 @@ def cmd_list(args):
 
 def cmd_auto(args):
     import glob as _glob
-    import os
     found = _glob.glob(os.path.join(args.dir, "**", "*.memreport"), recursive=True)
-    found.sort(key=os.path.getmtime, reverse=True)
+    found.sort(key=memreport_sort_key, reverse=True)
 
     picked = []
     for path in found:
@@ -506,8 +584,9 @@ def cmd_auto(args):
 
     (new_path, new), (old_path, old) = picked
     print(f"# older: {old_path}\n# newer: {new_path}\n")
+    warn_if_not_full(old_path, old.get("parse_stats", {}))
+    warn_if_not_full(new_path, new.get("parse_stats", {}))
     if args.save_dir:
-        import os
         os.makedirs(args.save_dir, exist_ok=True)
         for snap, tag in ((old, "prev"), (new, "latest")):
             with open(os.path.join(args.save_dir, tag + ".json"), "w",

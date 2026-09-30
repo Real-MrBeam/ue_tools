@@ -1,5 +1,5 @@
 @echo off
-REM Opens the texture pool viewer on the folder this file is in.
+REM Opens the texture pool viewer on the editor MemReports folder by default.
 REM Keep poolview.py and pooldump.py next to it.
 cd /d "%~dp0"
 where pythonw >nul 2>nul
