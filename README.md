@@ -1,35 +1,24 @@
 # Unreal Tools
 A small suite of content-pipeline helpers for Unreal Engine that smooth over repetitive setup, expose useful debug views, and make VAT-style workflows easier.
 
+Each tool lives in its own folder with its own README. Copy the folder you want into your project; they don't depend on each other.
+
+| Tool | What it does |
+| --- | --- |
+| [Luminance Reflectance Debug View](DebugViewAlbedoRange/README.md) | Flags physically implausible albedo values in the viewport |
+| [Memreport Viewer](memreportViewer/README.md) | Charts texture memory across `memreport` captures |
+| [Light Ray Tool](lightrayTools/README.md) | Generates light shafts from a directional light |
+| [VAT Import Settings](vatTools/README.md) | Applies the right import settings to Vertex Animation Textures |
+| [Custom Primitive Data Widget](cpdWidget/README.md) | Batch-sets Custom Primitive Data across many actors |
+| [Volumetric Lightmap Sampler](vlmSampler/README.md) | Bakes local light level into Custom Primitive Data |
+
 ## Luminance Reflectance Debug View - Python EUW
 ### UE 5.7
-
-A custom Debug View that highlights physically implausible luminance/reflectance values, so you can spot assets that break energy conservation or reference values. Helpful when you need consistent color accuracy across a project.
+A custom debug view that highlights physically implausible luminance and reflectance values, so you can spot assets that break energy conservation or stray from reference values.
 
 ![image](readme/debugLum1.gif)
-![image](readme/debugLum2.gif)
 
-Install & run
-
-1. Unzip the tool into your project’s **game** directory.
-2. Set the included Python script as a startup script in settings.
-
-![image](/readme/startup.png)
-
-3. Edit the `DefauleEngine.ini` file in our config dir with these two lines:
-```
-[Engine.BufferVisualizationMaterials]
-
-AlbedoValidation=(Material="/Game/BufferVisualization/M_AlbedoValidation.M_AlbedoValidation", Name=LOCTEXT("M_AlbedoValidationMat", "Albedo Validation"))
-```
-4. Restart the editor.
-5. Start the debug view from the Buffer Visualization category.
-
-![image](/readme/buffervis.png)
-
-5. Launch the range tool from the native Tools menu; close it from the same menu.
-
-![image](readme/debugLum1.png)
+[Install and usage](DebugViewAlbedoRange/README.md)
 
 ## Memreport Viewer - Python
 ### UE 5
@@ -37,66 +26,36 @@ A desktop viewer for `memreport -full` captures. It charts resident texture memo
 
 ![image](readme/poolview.gif)
 
-See the [Memreport Viewer README](memreportViewer/README.md) for install and usage.
+[Install and usage](memreportViewer/README.md)
 
 ## Light Ray Tool - Geometry Script / EUW
-### UE 4.7
-**This tool requires Unreal [Geometry Script](https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-users-guide-in-unreal-engine) plugin to be enabled in your project.**
-
-A dynamic-mesh ray-shaft generator driven by a directional light. It uses distance, Fresnel, and (on PC) Distance Fields for believable fading so the result avoids obvious planes and clipping. Originally built for low-end VR (Quest 2), but it also complements volumetric fog on PC.
+### UE 5
+A dynamic-mesh ray-shaft generator driven by a directional light. It fades with distance, Fresnel and Distance Fields, so the result avoids obvious planes and clipping. Built for low-end VR, but it also complements volumetric fog on PC.
 
 ![image](readme/ray1.gif)
 
-![image](readme/ray2.gif)
-
-Usage
-1. Give your sun light (directional or spotlight) an Actor Tag, by default the tool looks for "sun".
-2. Place BP_LightRay in the level. Adjust Width, Depth, and Rotation via exposed params
-(actor rotation/scale transforms are intentionally locked, use the params instead).
-3. Use the EUW_LightRay panel:
-    - Bake - Generates static meshes and hides the dynamic actor.
-    - Update - Deletes the baked meshes and unhides the dynamic actor.
+[Install and usage](lightrayTools/README.md)
 
 ## VAT Import Setting Script - SAA
-### UE 4.7
-Scripted importer settings for Vertex Animation Textures so you don’t have to configure every texture/mesh by hand.
-
-Pair this with assets exported via my [Blender VAT Tools](https://github.com/Real-MrBeam/b3d_tools).
-Run the VAT settings script on selected textures and mesh. This will automatically set the correct import settings for you.
-
-- Applies consistent Unreal import settings, known to work with standard VAT materials.
-- Includes a simple VAT material to validate playback quickly.
-
-If you prefer manual setup, the official docs outline the expected settings for VAT:
-[Unreal Docs](https://docs.unrealengine.com/5.2/en-US/vertex-animation-tool---timeline-meshes-in-unreal-engine/)
-
-![image](readme/Blender%20Vertex%20Animation%20Texture%20Pipeline.png)
-
+### UE 5
+A scripted asset action that applies the import settings Vertex Animation Textures need, so you don't have to configure every texture and mesh by hand. Pairs with my [Blender VAT Tools](https://github.com/Real-MrBeam/b3d_tools).
 
 ![image](readme/vanim.gif)
 
+[Install and usage](vatTools/README.md)
+
 ## Custom Primitive Data Widget - EUW
-### UE 4.7
-An Editor Utility Widget to batch-set Custom Primitive Data across many actors/components, great for driving per-object material params like tint, dirt amount, etc.
+### UE 5
+An Editor Utility Widget that batch-sets Custom Primitive Data across many actors and components. Good for driving per-object material parameters such as tint or dirt amount.
 
 ![image](readme/CPDRandom.gif)
-![image](readme/CPDOffset.gif)
 
-Usage
-1. Select target actors or mesh components.
-2. Enter the parameter name (must match your material’s CPD index/name).
-3. Set a value or range - Apply (or Randomize).
+[Install and usage](cpdWidget/README.md)
 
 ## Volumetric Lightmap Sampler - EUW
-### UE 4.7
-Samples the Volumetric Lightmap (VLM) at each selected actor’s position and writes the result into Custom Primitive Data per Static Mesh Component. Perfect for tricks like fake reflections on fully rough materials (e.g., scale reflection strength by local light level) on low-end VR.
-You can use this simple [material](https://blueprintue.com/blueprint/24t7k-e6/) to try it out.
+### UE 5
+An Editor Utility Widget that samples the Volumetric Lightmap at each selected actor's position and writes the result into Custom Primitive Data, for tricks like fake reflections on fully rough materials.
 
 ![image](readme/vlmSampler.gif)
 
-Usage
-1. Run the VLM Sampler EUW.
-2. The sampled value is written to a CPD parameter on each component.
-3. In your material, read the CPD to modulate reflection strength.
-
-**Ensure your level has valid VLM data to sample.**
+[Install and usage](vlmSampler/README.md)
