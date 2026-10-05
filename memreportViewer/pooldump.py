@@ -34,13 +34,15 @@ Saved/Profiling/MemReports, "." is usually all you need.
   python pooldump.py auto                                newest two, here
   python pooldump.py auto --device Windows               cooked only
   python pooldump.py auto --device WindowsEditor         editor only
+  python pooldump.py auto --device Windows --config Development
   python pooldump.py auto --group UI --exclude-transient
   python pooldump.py auto --uncompressed                 compression progress
   python pooldump.py diff snaps/mon.json snaps/tue.json --fail-mb 32
 
-  --device matches the memreport's Device Name exactly. Use it whenever
-  editor and cooked reports share a folder tree, or "newest two" will pair
-  captures that are not comparable. A mismatch prints a warning either way.
+  --device and --config match the memreport header exactly. Use them whenever
+  editor, cooked, Development, and Test reports share a folder tree, or
+  "newest two" can pair captures that are not comparable. A mismatch prints a
+  warning either way.
 
   --fail-mb exits 1 when the pool grew past the budget, for CI gating.
   --json writes the same report machine-readably.
@@ -157,6 +159,11 @@ def memreport_capture_time(path):
 def memreport_sort_key(path):
     """Chronological and deterministic ordering for a memreport path."""
     return memreport_capture_time(path), os.path.normcase(os.path.abspath(path))
+
+
+def memreport_capture_iso(path):
+    """Return the memreport capture time as an ISO 8601 UTC string."""
+    return datetime.fromtimestamp(memreport_capture_time(path), timezone.utc).isoformat()
 
 
 def resolve_memreport(path, index=0):
@@ -329,9 +336,10 @@ def cmd_snapshot(args):
     textures, totals, stats = parse_memreport(path)
     warn_if_not_full(path, stats)
     snap = {
-        "captured_at": datetime.now(timezone.utc).isoformat(),
+        "captured_at": memreport_capture_iso(path),
+        "snapshot_created_at": datetime.now(timezone.utc).isoformat(),
         "source": path,
-        "label": args.label,
+        "label": args.label or stats.get("header", {}).get("Changelist"),
         "section_totals": totals,
         "parse_stats": stats,
         "textures": textures,
@@ -360,13 +368,16 @@ def cmd_diff(args):
         old = json.load(fh)
     with open(args.new, encoding="utf-8") as fh:
         new = json.load(fh)
+    warn_if_not_full(old.get("source", args.old), old.get("parse_stats", {}))
+    warn_if_not_full(new.get("source", args.new), new.get("parse_stats", {}))
     return render_diff(old, new, args)
 
 
 def build_snapshot(path, label=None):
     textures, totals, stats = parse_memreport(path)
     return {
-        "captured_at": datetime.now(timezone.utc).isoformat(),
+        "captured_at": memreport_capture_iso(path),
+        "snapshot_created_at": datetime.now(timezone.utc).isoformat(),
         "source": path,
         "label": label or stats.get("header", {}).get("Changelist"),
         "section_totals": totals,
@@ -380,9 +391,13 @@ def device_name(snap):
     return h.get("Device Name", "?")
 
 
+def config_name(snap):
+    h = snap.get("parse_stats", {}).get("header", {}) or {}
+    return h.get("Config", "?")
+
+
 def capture_kind(snap):
-    """Device Name + Config, e.g. 'Windows/Development'. Used to refuse
-    comparing an editor PIE capture against a cooked one."""
+    """Device Name + Config, e.g. 'Windows/Development'."""
     h = snap.get("parse_stats", {}).get("header", {}) or {}
     return f"{h.get('Device Name', '?')}/{h.get('Config', '?')}"
 
@@ -454,11 +469,14 @@ def render_diff(old, new, args):
     for t in added:
         for tag in classify(t) or ["PLAIN_STREAMING"]:
             attrib[tag] += mb(t["mem_kb"])
+    for t in removed:
+        for tag in classify(t) or ["PLAIN_STREAMING"]:
+            attrib[tag] -= mb(t["mem_kb"])
     for t in changed:
         for tag in classify(t) or ["PLAIN_STREAMING"]:
             attrib[tag] += mb(t["delta_kb"])
     if attrib:
-        print("\ngrowth attributed by tag:")
+        print("\nchange attributed by tag:")
         for tag, v in sorted(attrib.items(), key=lambda kv: -kv[1]):
             if abs(v) >= 0.1:
                 print(f"  {tag:<16} {v:+8.1f} MB")
@@ -466,10 +484,12 @@ def render_diff(old, new, args):
     by_group = defaultdict(float)
     for t in added:
         by_group[t["lod_group"] or "(none)"] += mb(t["mem_kb"])
+    for t in removed:
+        by_group[t["lod_group"] or "(none)"] -= mb(t["mem_kb"])
     for t in changed:
         by_group[t["lod_group"] or "(none)"] += mb(t["delta_kb"])
     if by_group:
-        print("\ngrowth by LODGroup:")
+        print("\nchange by LODGroup:")
         for g, v in sorted(by_group.items(), key=lambda kv: -kv[1])[:12]:
             if abs(v) >= 0.1:
                 print(f"  {g:<32} {v:+8.1f} MB")
@@ -576,6 +596,8 @@ def cmd_auto(args):
         snap = build_snapshot(path)
         if args.device and args.device.lower() != device_name(snap).lower():
             continue
+        if args.config and args.config.lower() != config_name(snap).lower():
+            continue
         picked.append((path, snap))
         if len(picked) == 2:
             break
@@ -650,6 +672,8 @@ def main():
     a.add_argument("--fail-mb", type=float)
     a.add_argument("--device", help="only consider captures whose Device Name "
                                     "matches, e.g. Windows or WindowsEditor")
+    a.add_argument("--config", help="only consider captures whose Config matches, "
+                                    "e.g. Development or Test")
     a.set_defaults(func=cmd_auto)
 
     args = p.parse_args()

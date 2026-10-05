@@ -181,6 +181,10 @@ class Report:
         return self.header.get("Config", "?")
 
     @property
+    def kind(self):
+        return f"{self.device} / {self.config}"
+
+    @property
     def cl(self):
         return self.header.get("Changelist", "?")
 
@@ -717,7 +721,8 @@ class App:
 
         bar1 = ttk.Frame(root, padding=(S(12), S(10), S(12), S(4)))
         bar1.pack(fill="x")
-        ttk.Button(bar1, text="Open folder\u2026", command=self.browse).pack(side="left")
+        self.open_btn = ttk.Button(bar1, text="Open folder\u2026", command=self.browse)
+        self.open_btn.pack(side="left")
         self.rescan_btn = ttk.Button(bar1, text="Rescan", command=self.start_load)
         self.rescan_btn.pack(side="left", padx=(S(6), 0))
         self.folder_lbl = ttk.Label(bar1, text=self.folder, style="Dim.TLabel")
@@ -732,7 +737,7 @@ class App:
 
         self.device_var = tk.StringVar(value="All")
         self.device_cb = ttk.Combobox(bar2, textvariable=self.device_var, state="readonly",
-                                      width=16, values=["All"])
+                                      width=23, values=["All"])
         field("Capture type", self.device_cb)
         self.mode_var = tk.StringVar(value="Texture group")
         mode_cb = ttk.Combobox(bar2, textvariable=self.mode_var, state="readonly", width=19,
@@ -851,6 +856,7 @@ class App:
                                  f"Put pooldump.py next to poolview.py in\n{HERE}")
             return
         self.loading = True
+        self.open_btn.state(["disabled"])
         self.rescan_btn.state(["disabled"])
         self.errors = []
         self.set_status(f"Scanning {self.folder}\u2026")
@@ -868,11 +874,13 @@ class App:
                     self.errors.append(f"{os.path.basename(msg[1])}: {msg[2]}")
                 elif kind == "fatal":
                     self.loading = False
+                    self.open_btn.state(["!disabled"])
                     self.rescan_btn.state(["!disabled"])
                     messagebox.showerror("Scan failed", msg[1])
                     return
                 elif kind == "done":
                     self.loading = False
+                    self.open_btn.state(["!disabled"])
                     self.rescan_btn.state(["!disabled"])
                     self.on_loaded(msg[1], msg[2])
                     return
@@ -882,13 +890,13 @@ class App:
 
     def on_loaded(self, reports, cached):
         self.reports = reports
-        devices = sorted({r.device for r in reports})
-        self.device_cb.configure(values=["All"] + devices)
-        if self.device_var.get() not in devices:
-            if "Windows" in devices:
-                self.device_var.set("Windows")
-            elif devices:
-                self.device_var.set(max(devices, key=lambda d: sum(r.device == d for r in reports)))
+        kinds = sorted({r.kind for r in reports})
+        self.device_cb.configure(values=["All"] + kinds)
+        if self.device_var.get() not in kinds:
+            if "Windows / Development" in kinds:
+                self.device_var.set("Windows / Development")
+            elif kinds:
+                self.device_var.set(max(kinds, key=lambda k: sum(r.kind == k for r in reports)))
             else:
                 self.device_var.set("All")
         if not reports:
@@ -928,8 +936,8 @@ class App:
         return {k: v for k, v in rep.textures.items() if self.tex_ok(k, v)}
 
     def refresh(self):
-        dev = self.device_var.get()
-        self.visible = [r for r in self.reports if dev == "All" or r.device == dev]
+        kind = self.device_var.get()
+        self.visible = [r for r in self.reports if kind == "All" or r.kind == kind]
         mode = self.mode_var.get()
         base = STACK_MODES[mode]
 
@@ -984,7 +992,7 @@ class App:
 
         self.labels = self.make_labels(self.visible)
         self.timeline.set_data(self.labels,
-                               [f"{r.long}   CL {r.cl}   {r.device}" for r in self.visible],
+                               [f"{r.long}   CL {r.cl}   {r.kind}" for r in self.visible],
                                series, self.sel, self.hidden_cats)
         self.update_selected()
 
@@ -1056,9 +1064,17 @@ class App:
                  f"{now_total:.1f} MB shown     {os.path.basename(cur.path)}")
 
         warns = []
+        partial = []
+        if prev and not prev.is_full_report:
+            partial.append("previous")
         if not cur.is_full_report:
-            warns.append("This is not a full report. Capture it with 'memreport -full'; "
-                         "some texture sections are missing.")
+            partial.append("current")
+        if len(partial) == 1:
+            warns.append(f"The {partial[0]} capture is not a full report. Capture it with "
+                         "'memreport -full'; some texture sections are missing.")
+        elif partial:
+            warns.append(f"The {' and '.join(partial)} captures are not full reports. Capture "
+                         "them with 'memreport -full'; some texture sections are missing.")
         if prev and (prev.device, prev.config) != (cur.device, cur.config):
             warns.append(f"The previous capture is {prev.device} / {prev.config}, so the two "
                          f"are not comparable.")
@@ -1183,6 +1199,7 @@ class App:
             lines.append("Filters: " + ", ".join(filt))
         if prev is None:
             lines.append(f"Shown: {now_total:.1f} MB. First capture of this type.")
+            lines += warns
         else:
             d = sum(v[1] for v in counts.values())
             lines.append(f"Shown: {now_total:.1f} MB, {d:+.1f} MB vs {prev.long} (CL {prev.cl})")
