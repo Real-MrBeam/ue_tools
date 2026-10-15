@@ -17,6 +17,14 @@ A desktop viewer for `memreport -full` captures. It charts resident texture memo
 
 [Install and usage](memreportViewer/README.md)
 
+## UDIM Builder - Python / PySide6
+### UE 5
+A standalone tool that turns a folder of per-asset textures into UDIM tile sets for Unreal. It validates the sources, previews the tile layout before generating anything, and an Unreal-side menu imports the result.
+
+![image](readme/udimBuilder.png)
+
+[Install and usage](UDIMBuilder/README.md)
+
 ## Light Ray Tool - Geometry Script / EUW
 ### UE 5
 A dynamic-mesh ray-shaft generator driven by a directional light. It fades with distance, Fresnel and Distance Fields, so the result avoids obvious planes and clipping. Built for low-end VR, but it also complements volumetric fog on PC.
